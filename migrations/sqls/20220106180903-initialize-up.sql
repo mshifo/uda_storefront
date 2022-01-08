@@ -1,0 +1,3 @@
+CREATE DATABASE storefront
+    WITH 
+    ENCODING = 'UTF8';
