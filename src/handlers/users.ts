@@ -45,7 +45,7 @@ userRoutes.get('/', AuthenticateMiddleware, async (req: Request, res: Response) 
  */
 userRoutes.get('/:id', AuthenticateMiddleware, async (req: Request, res: Response) => {
   try {
-    const user = await UserModel.find(req.params.id)
+    const user = await UserModel.find(req.params.id as unknown as number)
     res.status(user ? 200 : 404).send(user ?? { message: 'User Not found' }) // ternary operator
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong!' })
@@ -57,11 +57,9 @@ userRoutes.get('/:id', AuthenticateMiddleware, async (req: Request, res: Respons
  */
 userRoutes.post('/', ValidateMiddleware(UserCreateSchema), async (req: Request, res: Response) => {
   try {
-    const newUser = await UserModel.add(req.body)
-    const token = jwt.sign({ user: newUser }, config.token_secret as string)
-    res.json({ token })
+    await UserModel.add(req.body)
+    res.send({ message: 'User Created Successfully!' })
   } catch (error) {
-    console.log(error)
     res.status(500).json({ message: 'Something went wrong!' })
   }
 })

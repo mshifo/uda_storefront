@@ -3,23 +3,27 @@ import AuthenticateMiddleware from '../middlewares/AuthenticateMiddleware'
 import ProductCreateSchema from '../middlewares/schemas/ProductsSchema'
 import ValidateMiddleware from '../middlewares/ValidateMiddleware'
 import ProductModel from '../models/Product.model'
-// import ProductInterface from '../interfaces/Product'
-import Product from '../models/Product.model'
 
 const productsApi = Router()
 
+/**
+ * index
+ */
 productsApi.get('/', async (req: Request, res: Response) => {
   try {
-    const products = await Product.all()
+    const products = await ProductModel.all()
     res.send(products)
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong!' })
   }
 })
 
+/**
+ * show
+ */
 productsApi.get('/:id', async (req: Request, res: Response) => {
   try {
-    const product = await Product.find(req.params.id)
+    const product = await ProductModel.find(req.params.id as unknown as number)
     res.status(product ? 200 : 404).send(product ?? { message: 'Product Not found' }) // ternary operator
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong!' })
@@ -37,7 +41,6 @@ productsApi.post(
       const newProduct = await ProductModel.add(req.body)
       res.json(newProduct)
     } catch (error) {
-      console.log(error)
       res.status(500).json({ message: 'Something went wrong!' })
     }
   }

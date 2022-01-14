@@ -1,9 +1,9 @@
-{
+  {
     "dev": {
       "driver": "pg",
-      "user": "postgres",
-      "password": "postgres",
-      "host": "127.0.0.1",
-      "database": "storefront"
+      "database": { "ENV": "DB_DATABASE" },
+      "host": { "ENV": "DB_HOST" },
+      "user": { "ENV": "DB_USER" },
+      "password": { "ENV": "DB_PASSWORD" }
     }
   }

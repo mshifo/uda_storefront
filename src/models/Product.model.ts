@@ -13,7 +13,7 @@ class ProductModel {
     }
   }
 
-  static async find(id: string): Promise<Product> {
+  static async find(id: number): Promise<Product> {
     try {
       const connection = await client.connect()
       const { rows } = await client.query('SELECT * FROM products WHERE id = $1', [id])
@@ -24,12 +24,8 @@ class ProductModel {
     }
   }
 
-  /**
-   * add
-   */
   static add = async (product: Product): Promise<Product> => {
     const sql = 'INSERT INTO products (name,price) VALUES($1,$2) RETURNING *'
-    // console.log(typeof product.price)
     const parameters = [product.name, product.price]
     try {
       const connection = await client.connect()

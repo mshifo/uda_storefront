@@ -1,6 +1,7 @@
 import Joi from 'joi'
 import UserModel from '../../models/User.model'
 
+// validate if username already exists
 const lookup = async (userName: string) => {
   const user = await UserModel.findByUserName(userName)
   if (user) {

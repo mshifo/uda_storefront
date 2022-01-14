@@ -14,7 +14,7 @@ class UserModel {
     }
   }
 
-  static async find(id: string): Promise<User> {
+  static async find(id: number): Promise<User> {
     try {
       const connection = await client.connect()
       const { rows } = await client.query(
@@ -64,9 +64,6 @@ class UserModel {
     }
   }
 
-  /**
-   * add
-   */
   static add = async (user: User): Promise<User> => {
     const sql =
       'INSERT INTO users (userName,firstName,lastName,password) VALUES($1,$2,$3,$4) RETURNING *'
