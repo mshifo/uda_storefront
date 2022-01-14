@@ -1,9 +1,12 @@
 enum order_status {'active','complete'}
-
-export default interface OrderInterface {
+export interface Order{
     orderId: number,
     status: order_status,
-    total: number,
     user_id: number
+}
+export interface OrderWithDetails extends Order{
+    product_id: number,
+    quantity: number,
+
 }
   
