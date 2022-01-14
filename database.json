@@ -3,7 +3,7 @@
       "driver": "pg",
       "user": "postgres",
       "password": "postgres",
-      "host": "localhost",
+      "host": "127.0.0.1",
       "database": "storefront"
     }
   }

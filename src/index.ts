@@ -1,7 +1,7 @@
 import express, { Application } from 'express'
 import morgan from 'morgan'
 import * as dotenv from 'dotenv'
-import routes from './api'
+import routes from './handlers'
 
 dotenv.config()
 
@@ -11,7 +11,12 @@ const app: Application = express()
 // HTTP request logger middleware
 app.use(morgan('short'))
 
-app.use(express.json)
+app.use(express.json())
+
+app.get('/', async (req, res) => {
+  res.send('Hello Storefront')
+})
+
 app.use(routes)
 
 // start express server
