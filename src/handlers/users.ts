@@ -19,7 +19,7 @@ userRoutes.post(
     try {
       const userToLogin: User = req.body
       const user = await UserModel.authenticate(userToLogin.userName, userToLogin.password)
-      const token = jwt.sign({ user }, config.token_secret as string)
+      const token = jwt.sign({ user }, config.token_secret as string, { expiresIn: '1d' })
       res.json({ token })
     } catch (error) {
       console.log(error)
