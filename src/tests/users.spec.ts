@@ -47,19 +47,19 @@ describe('Testing Users Endpoints', () => {
       .expect(422)
   })
 
-  it('Testing get /user', async () => {
+  it('Testing get /users', async () => {
     await request.get('/users').set('Authorization', `Bearer ${token}`).expect(200)
   })
 
-  it('Testing get /user not authenticated', async () => {
+  it('Testing get /users not authenticated', async () => {
     await request.get('/users').expect(401)
   })
 
-  it('Testing get /user/:id', async () => {
+  it('Testing get /users/:id', async () => {
     await request.get(`/users/${userId}`).set('Authorization', `Bearer ${token}`).expect(200)
   })
 
-  it('Testing get /user/:id not found', async () => {
+  it('Testing get /users/:id not found', async () => {
     await request.get(`/users/999999`).set('Authorization', `Bearer ${token}`).expect(404)
   })
 })
