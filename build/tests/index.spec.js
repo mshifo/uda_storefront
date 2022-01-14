@@ -40,18 +40,111 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var supertest_1 = __importDefault(require("supertest"));
+var jsonwebtoken_1 = require("jsonwebtoken");
 var index_1 = __importDefault(require("../index"));
+var config_1 = __importDefault(require("../helpers/config"));
 // create a request object
 var request = (0, supertest_1.default)(index_1.default);
-describe('Test endpoint response', function () {
-    it('test hello world endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var response;
+describe('Testing Users Endpoints', function () {
+    var user = {
+        firstName: 'John',
+        lastName: 'Doe',
+        password: 'Password',
+        password_confirmation: 'Password',
+        userName: (Math.random() + 1).toString(36).substring(7)
+    };
+    var token;
+    var userId;
+    it('Testing post /users', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request.get('/')];
+                case 0: return [4 /*yield*/, request
+                        .post('/users')
+                        .send(user)
+                        .expect(200)
+                        .then(function (res) {
+                        token = res.body.token;
+                        var decodedJWT = (0, jsonwebtoken_1.verify)(token, config_1.default.token_secret);
+                        userId = decodedJWT.user.id;
+                    })];
                 case 1:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('Testing post /users invalid data', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.post('/users').send({ firstName: 'test' }).expect(422)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('Testing post /users/login', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .post('/users/login')
+                        .send({ userName: user.userName, password: user.password })
+                        .expect(200)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('Testing post /users/login wrong Credentials', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request
+                        .post('/users/login')
+                        .send({ userName: user.userName, password: '88888888' })
+                        .expect(422)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('Testing get /user', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/users').set('Authorization', "Bearer ".concat(token)).expect(200)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('Testing get /user not authenticated', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/users').expect(401)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('Testing get /user/:id', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get("/users/".concat(userId)).set('Authorization', "Bearer ".concat(token)).expect(200)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('Testing get /user/:id not found', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get("/users/999999").set('Authorization', "Bearer ".concat(token)).expect(404)];
+                case 1:
+                    _a.sent();
                     return [2 /*return*/];
             }
         });

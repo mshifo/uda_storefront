@@ -39,25 +39,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var morgan_1 = __importDefault(require("morgan"));
-var handlers_1 = __importDefault(require("./handlers"));
-var config_1 = __importDefault(require("./helpers/config"));
-var PORT = config_1.default.port || 3000;
-// create an instance server
-var app = (0, express_1.default)();
-// HTTP request logger middleware
-app.use((0, morgan_1.default)('short'));
-app.use(express_1.default.json());
-app.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+var express_1 = require("express");
+var AuthenticateMiddleware_1 = __importDefault(require("../middlewares/AuthenticateMiddleware"));
+var OrdersSchema_1 = __importDefault(require("../middlewares/schemas/OrdersSchema"));
+var ValidateMiddleware_1 = __importDefault(require("../middlewares/ValidateMiddleware"));
+var Order_model_1 = __importDefault(require("../models/Order.model"));
+var orderRoutes = (0, express_1.Router)();
+orderRoutes.post('/', [AuthenticateMiddleware_1.default, (0, ValidateMiddleware_1.default)(OrdersSchema_1.default)], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_1;
     return __generator(this, function (_a) {
-        res.send('Hello Storefront!');
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, Order_model_1.default.add(req.body)];
+            case 1:
+                _a.sent();
+                res.send({ order: 'Order Created Successfully!' });
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                res.status(500).json({ message: 'Something went wrong!' });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
     });
 }); });
-app.use(handlers_1.default);
-// start express server
-app.listen(PORT, function () {
-    console.log("Server is starting at prot:".concat(PORT));
-});
-exports.default = app;
+orderRoutes.get('/:user_id', AuthenticateMiddleware_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var orders, error_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, Order_model_1.default.find(req.params.user_id)];
+            case 1:
+                orders = _a.sent();
+                res.send(orders);
+                return [3 /*break*/, 3];
+            case 2:
+                error_2 = _a.sent();
+                console.log(error_2);
+                res.status(500).json({ message: 'Something went wrong!' });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
+exports.default = orderRoutes;

@@ -39,25 +39,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var morgan_1 = __importDefault(require("morgan"));
-var handlers_1 = __importDefault(require("./handlers"));
-var config_1 = __importDefault(require("./helpers/config"));
-var PORT = config_1.default.port || 3000;
-// create an instance server
-var app = (0, express_1.default)();
-// HTTP request logger middleware
-app.use((0, morgan_1.default)('short'));
-app.use(express_1.default.json());
-app.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+exports.UserLoginSchema = exports.UserCreateSchema = void 0;
+var joi_1 = __importDefault(require("joi"));
+var User_model_1 = __importDefault(require("../../models/User.model"));
+// validate if username already exists
+var lookup = function (userName) { return __awaiter(void 0, void 0, void 0, function () {
+    var user;
     return __generator(this, function (_a) {
-        res.send('Hello Storefront!');
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, User_model_1.default.findByUserName(userName)];
+            case 1:
+                user = _a.sent();
+                if (user) {
+                    throw new Error('User Name Already Exists');
+                }
+                return [2 /*return*/];
+        }
     });
-}); });
-app.use(handlers_1.default);
-// start express server
-app.listen(PORT, function () {
-    console.log("Server is starting at prot:".concat(PORT));
+}); };
+var UserCreateSchema = joi_1.default.object().keys({
+    userName: joi_1.default.string().required().external(lookup),
+    firstName: joi_1.default.string().required(),
+    lastName: joi_1.default.string().required(),
+    password: joi_1.default.string().min(8),
+    password_confirmation: joi_1.default.any()
+        .equal(joi_1.default.ref('password'))
+        .required()
+        .label('Confirm password')
+        .messages({ 'any.only': '{{#label}} does not match' })
 });
-exports.default = app;
+exports.UserCreateSchema = UserCreateSchema;
+var UserLoginSchema = joi_1.default.object().keys({
+    userName: joi_1.default.string().required(),
+    password: joi_1.default.string().min(8)
+});
+exports.UserLoginSchema = UserLoginSchema;

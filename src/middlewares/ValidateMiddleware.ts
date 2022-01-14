@@ -9,7 +9,7 @@ const ValidateMiddleware =
         next()
       })
       .catch((error) => {
-        res.status(422).json({ error: error.details[0].message })
+        res.status(422).json({ error: error.details })
       })
   }
 

@@ -19,8 +19,12 @@ userRoutes.post(
     try {
       const userToLogin: User = req.body
       const user = await UserModel.authenticate(userToLogin.userName, userToLogin.password)
-      const token = jwt.sign({ user }, config.token_secret as string, { expiresIn: '1d' })
-      res.json({ token })
+      if (user) {
+        const token = jwt.sign({ user }, config.token_secret as string, { expiresIn: '1d' })
+        res.json({ token })
+      } else {
+        res.status(422).json({ message: 'Wrong Credentials!' })
+      }
     } catch (error) {
       console.log(error)
       res.status(500).json({ message: 'Something went wrong!' })
@@ -57,8 +61,9 @@ userRoutes.get('/:id', AuthenticateMiddleware, async (req: Request, res: Respons
  */
 userRoutes.post('/', ValidateMiddleware(UserCreateSchema), async (req: Request, res: Response) => {
   try {
-    await UserModel.add(req.body)
-    res.send({ message: 'User Created Successfully!' })
+    const user = await UserModel.add(req.body)
+    const token = jwt.sign({ user }, config.token_secret as string, { expiresIn: '1d' })
+    res.json({ token })
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong!' })
   }
