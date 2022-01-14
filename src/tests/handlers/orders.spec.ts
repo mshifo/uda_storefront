@@ -1,8 +1,8 @@
 import supertest from 'supertest'
 import { JwtPayload, verify } from 'jsonwebtoken'
-import app from '../index'
-import { UserType } from '../interfaces/User'
-import config from '../helpers/config'
+import app from '../../index'
+import { UserType } from '../../interfaces/User'
+import config from '../../helpers/config'
 
 // create a request object
 const request = supertest(app)

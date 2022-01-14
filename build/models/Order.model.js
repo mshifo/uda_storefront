@@ -53,7 +53,7 @@ var ProductModel = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         connection = _b.sent();
-                        return [4 /*yield*/, database_1.default.query('SELECT * FROM products')];
+                        return [4 /*yield*/, database_1.default.query('SELECT * FROM orders')];
                     case 2:
                         rows = (_b.sent()).rows;
                         connection.release();

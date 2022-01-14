@@ -80,7 +80,10 @@ var ProductModel = /** @class */ (function () {
                     case 2:
                         rows = (_b.sent()).rows;
                         connection.release();
-                        return [2 /*return*/, rows[0]];
+                        if (rows.length) {
+                            return [2 /*return*/, rows[0]];
+                        }
+                        return [2 /*return*/, null];
                     case 3:
                         error_2 = _b.sent();
                         throw new Error("Failed to fetch data ".concat(error_2));

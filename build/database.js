@@ -9,6 +9,6 @@ var client = new pg_1.Pool({
     host: config_1.default.db_host,
     user: config_1.default.db_user,
     password: config_1.default.db_password,
-    database: config_1.default.db_name
+    database: config_1.default.environment === 'dev' ? config_1.default.db_name : config_1.default.db_test_name
 });
 exports.default = client;

@@ -1,6 +1,6 @@
 import supertest from 'supertest'
-import app from '../index'
-import { UserType } from '../interfaces/User'
+import app from '../../index'
+import { UserType } from '../../interfaces/User'
 
 // create a request object
 const request = supertest(app)

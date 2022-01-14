@@ -28,6 +28,7 @@ create the database "storefront"
 psql -U username
 # Enter Password
 CREATE DATABASE storefront;
+CREATE DATABASE storefront_test;
 ```
 
 Create a .env file for the database connection using the the template in the file
@@ -42,10 +43,12 @@ DB_HOST=localhost
 DB_USER=postgres
 DB_PASSWORD=postgres
 DB_DATABASE=storefront
+DB_TEST_DATABASE=storefront_test
 PORT=3000
 BCRYPT_PASSWORD=my-secret-password
 SALT_ROUNDS=10
 TOKEN_SECRET=my-token-secret
+NODE_ENV=dev
 ```
 
 and add your values

@@ -5,7 +5,7 @@ class ProductModel {
   static async all(): Promise<Order[]> {
     try {
       const connection = await client.connect()
-      const { rows } = await client.query('SELECT * FROM products')
+      const { rows } = await client.query('SELECT * FROM orders')
       connection.release()
       return rows
     } catch (error) {

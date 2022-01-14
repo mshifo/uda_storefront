@@ -54,7 +54,7 @@ var UserModel = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         connection = _b.sent();
-                        return [4 /*yield*/, database_1.default.query('SELECT id,userName,firstName,lastName FROM users')];
+                        return [4 /*yield*/, database_1.default.query('SELECT * FROM users')];
                     case 2:
                         rows = (_b.sent()).rows;
                         connection.release();
@@ -77,11 +77,14 @@ var UserModel = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         connection = _b.sent();
-                        return [4 /*yield*/, database_1.default.query('SELECT id,userName,firstName,lastName FROM users WHERE id = $1', [id])];
+                        return [4 /*yield*/, database_1.default.query('SELECT * FROM users WHERE id = $1', [id])];
                     case 2:
                         rows = (_b.sent()).rows;
                         connection.release();
-                        return [2 /*return*/, rows[0]];
+                        if (rows.length) {
+                            return [2 /*return*/, rows[0]];
+                        }
+                        return [2 /*return*/, null];
                     case 3:
                         error_2 = _b.sent();
                         throw new Error("Failed to fetch data error: ".concat(error_2));
@@ -100,9 +103,7 @@ var UserModel = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         connection = _b.sent();
-                        return [4 /*yield*/, database_1.default.query('SELECT password FROM users WHERE userName = $1', [
-                                userName
-                            ])];
+                        return [4 /*yield*/, database_1.default.query('SELECT * FROM users WHERE userName = $1', [userName])];
                     case 2:
                         rows = (_b.sent()).rows;
                         connection.release();

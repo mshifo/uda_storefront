@@ -6,7 +6,7 @@ class UserModel {
   static async all(): Promise<User[]> {
     try {
       const connection = await client.connect()
-      const { rows } = await client.query('SELECT id,userName,firstName,lastName FROM users')
+      const { rows } = await client.query('SELECT * FROM users')
       connection.release()
       return rows
     } catch (error) {
@@ -14,15 +14,15 @@ class UserModel {
     }
   }
 
-  static async find(id: number): Promise<User> {
+  static async find(id: number): Promise<User | null> {
     try {
       const connection = await client.connect()
-      const { rows } = await client.query(
-        'SELECT id,userName,firstName,lastName FROM users WHERE id = $1',
-        [id]
-      )
+      const { rows } = await client.query('SELECT * FROM users WHERE id = $1', [id])
       connection.release()
-      return rows[0]
+      if (rows.length) {
+        return rows[0]
+      }
+      return null
     } catch (error) {
       throw new Error(`Failed to fetch data error: ${error}`)
     }
@@ -31,9 +31,7 @@ class UserModel {
   static async authenticate(userName: string, password: string): Promise<User | null> {
     try {
       const connection = await client.connect()
-      const { rows } = await client.query('SELECT password FROM users WHERE userName = $1', [
-        userName
-      ])
+      const { rows } = await client.query('SELECT * FROM users WHERE userName = $1', [userName])
       connection.release()
       if (rows.length) {
         const user = rows[0]

@@ -1,8 +1,6 @@
-export interface BasicUser {
-  id: number
-}
-
-export interface User extends BasicUser {
+export interface User {
+  [x: string]: any;
+  id?: number
   userName: string
   firstName: string
   lastName: string

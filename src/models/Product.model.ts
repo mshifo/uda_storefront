@@ -13,12 +13,15 @@ class ProductModel {
     }
   }
 
-  static async find(id: number): Promise<Product> {
+  static async find(id: number): Promise<Product | null> {
     try {
       const connection = await client.connect()
       const { rows } = await client.query('SELECT * FROM products WHERE id = $1', [id])
       connection.release()
-      return rows[0]
+      if (rows.length) {
+        return rows[0]
+      }
+      return null
     } catch (error) {
       throw new Error(`Failed to fetch data ${error}`)
     }
